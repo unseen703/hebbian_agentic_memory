@@ -25,12 +25,12 @@ from typing import Any, Dict, List, Optional, Sequence
 from .hebbian_knowledge_memory import HebbianKnowledgeMemory
 from .hebbian_memory import HebbianMemoryGraph
 from .hebbian_retriever import HebbianRetriever
-from .profile_utils import OpenAIClient, gpt_personality_analysis, gpt_update_profile
+from .profile_utils import GoogleAIClient, gpt_personality_analysis, gpt_update_profile
 from .utils import get_timestamp, load_api_keys
 
 
 BUFFER_SIZE = int(os.environ.get("HEBBIAN_KNOWLEDGE_BUFFER_SIZE", "10"))
-_ENCODE_BASE_URL = os.environ.get("OPENAI_BASE_URL")
+_ENCODE_BASE_URL = os.environ.get("GOOGLE_AI_BASE_URL")
 
 
 def load_locomo_dataset(data_path: str) -> List[Dict[str, Any]]:
@@ -258,15 +258,15 @@ def encode_locomo(
 
     os.makedirs(output_dir, exist_ok=True)
 
-    clients: List[OpenAIClient] = []
+    clients: List[GoogleAIClient] = []
     if not skip_knowledge:
         keys = load_api_keys()
         if not keys:
             raise RuntimeError(
-                "Knowledge extraction requires OPENAI_API_KEY or OPENAI_API_KEYS. "
+                "Knowledge extraction requires GOOGLE_AI_API or GOOGLE_AI_API_KEYS. "
                 "Pass --skip_knowledge to build only episodic graphs."
             )
-        clients = [OpenAIClient(api_key=key, base_url=_ENCODE_BASE_URL) for key in keys]
+        clients = [GoogleAIClient(api_key=key, base_url=_ENCODE_BASE_URL) for key in keys]
         print(f"Initialized {len(clients)} API clients for key rotation")
 
     results: List[Dict[str, Any]] = []

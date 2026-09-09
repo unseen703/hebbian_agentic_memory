@@ -1,4 +1,4 @@
 numpy
-openai
+google-genai
 sentence-transformers
 torch

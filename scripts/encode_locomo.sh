@@ -5,7 +5,7 @@ DATA_PATH="${1:-data/locomo10.json}"
 OUTPUT_DIR="${2:-results/locomo_mem_full}"
 WORKERS="${3:-5}"
 
-export HEBBIAN_MODEL="${HEBBIAN_MODEL:-gpt-4o-mini}"
+export HEBBIAN_MODEL="${HEBBIAN_MODEL:-gemma-4-26b-a4b-it}"
 export HEBBIAN_TAU="${HEBBIAN_TAU:-5184000}"
 export HEBBIAN_LEARNING_RATE="${HEBBIAN_LEARNING_RATE:-0.02}"
 export HEBBIAN_DECAY_RATE="${HEBBIAN_DECAY_RATE:-0.995}"

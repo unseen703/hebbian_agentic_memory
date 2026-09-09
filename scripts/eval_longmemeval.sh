@@ -5,7 +5,7 @@ DATA_PATH="${1:-data/longmemeval_s.json}"
 MEM_DIR="${2:-results/longmemeval_mem_full}"
 WORKERS="${3:-8}"
 
-export HEBBIAN_MODEL="${HEBBIAN_MODEL:-gpt-4o-mini}"
+export HEBBIAN_MODEL="${HEBBIAN_MODEL:-gemma-4-26b-a4b-it}"
 export HEBBIAN_TAU="${HEBBIAN_TAU:-1e7}"
 export HEBBIAN_LEARNING_RATE="${HEBBIAN_LEARNING_RATE:-0.02}"
 export HEBBIAN_DECAY_RATE="${HEBBIAN_DECAY_RATE:-0.995}"

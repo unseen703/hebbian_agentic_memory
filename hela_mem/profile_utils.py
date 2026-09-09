@@ -2,28 +2,43 @@
 
 from __future__ import annotations
 
-from openai import OpenAI
+import os
+
+from google import genai
+from google.genai import types
+
+from .utils import DEFAULT_MODEL, split_messages
 
 
-class OpenAIClient:
+class GoogleAIClient:
+    """Thin Google AI (Gemini API) wrapper that accepts OpenAI-style messages."""
+
     def __init__(self, api_key, base_url=None):
-        kwargs = {"api_key": api_key}
-        kwargs["base_url"] = base_url or "https://api.openai.com/v1"
-        self.client = OpenAI(**kwargs)
+        base_url = base_url or os.environ.get("GOOGLE_AI_BASE_URL", "").strip()
+        http_options = types.HttpOptions(base_url=base_url) if base_url else None
+        self.client = genai.Client(api_key=api_key, http_options=http_options)
 
     def chat_completion(self, model, messages, temperature=0.7, max_tokens=2000):
-        response = self.client.chat.completions.create(
+        system_instruction, contents = split_messages(messages)
+        response = self.client.models.generate_content(
             model=model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                temperature=temperature,
+                max_output_tokens=max_tokens,
+                # No tools are used; silences the SDK's per-call AFC advisory.
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+            ),
         )
-        return response.choices[0].message.content.strip()
+        text = getattr(response, "text", None)
+        return text.strip() if text else ""
 
 
 def gpt_generate_answer(prompt, messages, client):
     del prompt
-    return client.chat_completion(model="gpt-4o-mini", messages=messages, temperature=0.7, max_tokens=2000)
+    model = os.environ.get("HEBBIAN_MODEL", DEFAULT_MODEL)
+    return client.chat_completion(model=model, messages=messages, temperature=0.7, max_tokens=2000)
 
 
 def analyze_assistant_knowledge(dialogs, client):
