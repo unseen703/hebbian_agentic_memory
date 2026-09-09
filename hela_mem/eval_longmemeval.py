@@ -2,7 +2,7 @@
 LongMemEval Evaluation for Hebbian Memory
 
 Loads encoded Hebbian memory graphs and evaluates on LongMemEval-S questions.
-Uses GPT-4o-mini as judge with type-specific prompts (same as LightMem).
+Uses the configured Google AI model (Gemma) as judge with type-specific prompts (same as LightMem).
 
 Usage:
     python -m hela_mem.eval_longmemeval \
@@ -422,7 +422,7 @@ def evaluate_single_item(
         1. Load encoded Hebbian memory graph
         2. Optionally run consolidation
         3. Retrieve + generate answer
-        4. Judge with GPT-4o-mini
+        4. Judge with the configured Google AI model (Gemma)
         5. Save per-item result
 
     Returns:

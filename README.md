@@ -56,23 +56,24 @@ pip install -r requirements.txt
 Configure your API access:
 
 ```bash
-export OPENAI_API_KEY="your-key"
-export OPENAI_BASE_URL="https://api.openai.com/v1"
+export GOOGLE_AI_API="your-google-ai-api-key"
 ```
 
 If you want multi-key rotation, provide:
 
 ```bash
-export OPENAI_API_KEYS="key1,key2,key3"
+export GOOGLE_AI_API_KEYS="key1,key2,key3"
 ```
 
 or
 
 ```bash
-export OPENAI_API_KEYS_FILE="/path/to/keys.txt"
+export GOOGLE_AI_API_KEYS_FILE="/path/to/keys.txt"
 ```
 
-The default model is `gpt-4o-mini`.
+The default model is `gemma-4-26b-a4b-it`, served by the Google AI (Gemini) API. Override it with `HEBBIAN_MODEL` (for example `gemma-4-31b-it` or `gemma-3-27b-it`).
+
+The key may also be placed in a `.env` file at the repository root as `GOOGLE_AI_API=...`; it is loaded automatically and never overrides an already-exported variable.
 
 ## Dataset Format
 
@@ -144,11 +145,10 @@ Evaluation does:
 
 ## Reproduce
 
-Configure standard OpenAI credentials:
+Configure your Google AI credentials:
 
 ```bash
-export OPENAI_API_KEY="your-key"
-export OPENAI_BASE_URL="https://api.openai.com/v1"
+export GOOGLE_AI_API="your-google-ai-api-key"
 ```
 
 ### LongMemEval-S
@@ -241,7 +241,7 @@ LoCoMo evaluation reports F1 and BLEU-1 overall, by sample, and by question cate
 
 - This release keeps the original experiment-style environment variable names (`HEBBIAN_*`) so existing commands map cleanly.
 - API-key rotation is still supported, but keys must now come from environment variables or a local keys file.
-- The code uses the standard OpenAI Python SDK request pattern (`client.chat.completions.create`) with `OPENAI_API_KEY` and the official OpenAI base URL by default.
+- The code uses the Google Gen AI Python SDK (`client.models.generate_content`) against the Google AI (Gemini) API, authenticated with `GOOGLE_AI_API`. OpenAI-style `messages` lists are converted internally: `system` turns become the request `system_instruction`, and `assistant` turns map to the `model` role.
 - The repository has been cleaned for release, but the benchmark paths are kept source-aligned rather than simplified.
 
 ## Citation

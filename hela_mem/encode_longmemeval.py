@@ -23,11 +23,11 @@ from typing import Any, Dict, List, Optional
 from .hebbian_memory import HebbianMemoryGraph
 from .hebbian_retriever import HebbianRetriever
 from .hebbian_knowledge_memory import HebbianKnowledgeMemory
-from .profile_utils import OpenAIClient, gpt_personality_analysis, gpt_update_profile
+from .profile_utils import GoogleAIClient, gpt_personality_analysis, gpt_update_profile
 from .utils import get_timestamp, load_api_keys
 
 HAS_KNOWLEDGE_UTILS = True
-_ENCODE_BASE_URL = os.environ.get("OPENAI_BASE_URL")
+_ENCODE_BASE_URL = os.environ.get("GOOGLE_AI_BASE_URL")
 
 # Incremental knowledge extraction buffer size
 BUFFER_SIZE = int(os.environ.get("HEBBIAN_KNOWLEDGE_BUFFER_SIZE", "10"))
@@ -246,16 +246,16 @@ def encode_longmemeval(
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
 
-    # Initialize OpenAI clients for knowledge extraction (one per API key for rotation)
+    # Initialize Google AI clients for knowledge extraction (one per API key for rotation)
     clients = []
     if not skip_knowledge and HAS_KNOWLEDGE_UTILS:
         keys = load_api_keys()
         if not keys:
             raise RuntimeError(
-                "Knowledge extraction requires OPENAI_API_KEY or OPENAI_API_KEYS."
+                "Knowledge extraction requires GOOGLE_AI_API or GOOGLE_AI_API_KEYS."
             )
         for key in keys:
-            clients.append(OpenAIClient(api_key=key, base_url=_ENCODE_BASE_URL))
+            clients.append(GoogleAIClient(api_key=key, base_url=_ENCODE_BASE_URL))
         print(f"Initialized {len(clients)} API clients for key rotation")
 
     # Encode items in parallel
